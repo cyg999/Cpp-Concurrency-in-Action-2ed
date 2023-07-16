@@ -21,6 +21,8 @@ class A {
 
   void step2() {
     std::unique_lock<std::mutex> l(m_);
+ //谓词为false,wait被阻塞，当线程被阻塞时，该函数会自动调用std::mutex的unlock()释放锁，使得其它被阻塞在锁竞争上的线程得以继续执行。一旦当前线程获得通知(notify，
+//通常是另外某个线程调用notify_*唤醒了当前线程)，wait()函数也是自动调用std::mutex的lock()。
     cv_.wait(l, [this] { return step1_done_; });
     step2_done_ = true;
     std::cout << 2;
